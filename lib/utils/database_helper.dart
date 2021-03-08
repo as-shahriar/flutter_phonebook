@@ -48,4 +48,26 @@ class DatabaseHelper {
         ? []
         : contacts.map((x) => User.fromMap(x)).toList();
   }
+
+  Future<bool> isSignedIn(String email, String password) async {
+    var dbContact = await database;
+    List<Map> maps = await dbContact.query(User.tblUser,
+        columns: [User.colPassword],
+        where: '${User.colEmail} = ? and ${User.colPassword} = ?',
+        whereArgs: [email, password]);
+    if (maps.isNotEmpty)
+      return true;
+    else
+      return false;
+  }
+
+  Future<bool> uniqueEmail(String email) async {
+    Database db = await database;
+    List<dynamic> whereargs = [email];
+    List<Map> result = await db.query(User.tblUser,
+        where: '${User.colEmail} = ?', whereArgs: whereargs);
+    Map a = result.firstWhere((element) => element['email'] == email,
+        orElse: () => null);
+    return (a == null);
+  }
 }

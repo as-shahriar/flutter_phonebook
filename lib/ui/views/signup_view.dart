@@ -8,7 +8,7 @@ import 'package:phonebook/validators/validators.dart';
 
 import '../../themeConfig.dart';
 
-class LoginView extends StatelessWidget {
+class SignupView extends StatelessWidget {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
   final _formKey = GlobalKey<FormState>();
   DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -32,7 +32,7 @@ class LoginView extends StatelessWidget {
                         children: [
                           Icon(Icons.lock, size: 48.0, color: primaryColor),
                           Text(
-                            "Login",
+                            "Sign Up",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 35,
@@ -57,18 +57,18 @@ class LoginView extends StatelessWidget {
                         height: 35.0,
                       ),
                       SubmitButton(
-                        text: "Login",
+                        text: "Sign Up",
                         validationHandler: () async {
                           if (_formKey.currentState.validate()) {
-                            // If the form is valid, display a Snackbar.
                             _formKey.currentState.save();
-                            if (await model.login()) {
+                            if (await model.uniqueEmail()) {
+                              model.insertUser();
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(content: Text('OK')));
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
-                                content: Text('Invalid Credantials.'),
+                                content: Text('Email Address Already Exists.'),
                                 backgroundColor: Colors.red[300],
                               ));
                             }

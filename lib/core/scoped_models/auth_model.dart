@@ -35,9 +35,19 @@ class AuthnModel extends BaseModel {
     await _databaseHelper.insertUser(user);
   }
 
+  Future<bool> login() async {
+    return await _databaseHelper.isSignedIn(user.email, user.password);
+  }
+
+  Future<bool> uniqueEmail() async {
+    return await _databaseHelper.uniqueEmail(user.email);
+  }
+
   void getUsers() async {
     List<User> x = await _databaseHelper.fetchContacts();
-    print(x[0].email);
+    x.forEach((element) {
+      print('${element.id},${element.email},${element.password}');
+    });
     users = x;
   }
 
