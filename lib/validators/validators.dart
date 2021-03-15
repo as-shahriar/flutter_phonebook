@@ -19,3 +19,12 @@ String passValidator(value) {
   }
   return null;
 }
+
+String textValidator(value) {
+  return null;
+  if (value.isEmpty) {
+    return 'Field can\'t be empty';
+  }
+
+  return null;
+}

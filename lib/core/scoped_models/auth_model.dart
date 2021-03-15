@@ -35,7 +35,7 @@ class AuthnModel extends BaseModel {
     await _databaseHelper.insertUser(user);
   }
 
-  Future<bool> login() async {
+  Future<int> login() async {
     return await _databaseHelper.isSignedIn(user.email, user.password);
   }
 

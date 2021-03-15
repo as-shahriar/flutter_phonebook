@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:phonebook/core/scoped_models/auth_model.dart';
 import 'package:phonebook/ui/views/base_view.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:phonebook/utils/database_helper.dart';
 import 'package:phonebook/validators/validators.dart';
 
 import '../../themeConfig.dart';
+import 'login_view.dart';
 
 class SignupView extends StatelessWidget {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
@@ -63,8 +65,7 @@ class SignupView extends StatelessWidget {
                             _formKey.currentState.save();
                             if (await model.uniqueEmail()) {
                               model.insertUser();
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(content: Text('OK')));
+                              Navigator.of(context).pushNamed('login');
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
@@ -75,6 +76,27 @@ class SignupView extends StatelessWidget {
                           }
                         },
                       ),
+                      SizedBox(
+                        height: 28.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                                text: "Back to ",
+                                style: TextStyle(color: Colors.black),
+                                children: [
+                                  TextSpan(
+                                      text: "Login",
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () => Navigator.of(context)
+                                            .pushNamed('login')),
+                                ]),
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),
