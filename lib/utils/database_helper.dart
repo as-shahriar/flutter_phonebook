@@ -49,16 +49,16 @@ class DatabaseHelper {
         : contacts.map((x) => User.fromMap(x)).toList();
   }
 
-  Future<bool> isSignedIn(String email, String password) async {
+  Future<int> isSignedIn(String email, String password) async {
     var dbContact = await database;
     List<Map> maps = await dbContact.query(User.tblUser,
-        columns: [User.colPassword],
+        columns: [User.colId],
         where: '${User.colEmail} = ? and ${User.colPassword} = ?',
         whereArgs: [email, password]);
-    if (maps.isNotEmpty)
-      return true;
-    else
-      return false;
+    if (maps.isNotEmpty) {
+      return maps[0].entries.first.value;
+    } else
+      return -1;
   }
 
   Future<bool> uniqueEmail(String email) async {

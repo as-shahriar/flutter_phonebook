@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:phonebook/core/scoped_models/auth_model.dart';
 import 'package:phonebook/ui/views/base_view.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +6,12 @@ import 'package:phonebook/ui/widgets/formInputField.dart';
 import 'package:phonebook/ui/widgets/submit_button.dart';
 import 'package:phonebook/utils/database_helper.dart';
 import 'package:phonebook/validators/validators.dart';
-
+import '../../service_locator.dart';
 import '../../themeConfig.dart';
+import 'package:phonebook/Services/SharedPref.dart';
 
 class LoginView extends StatelessWidget {
+  final SharedPrefs sharedPrefs = locator<SharedPrefs>();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
   final _formKey = GlobalKey<FormState>();
   DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -62,9 +65,11 @@ class LoginView extends StatelessWidget {
                           if (_formKey.currentState.validate()) {
                             // If the form is valid, display a Snackbar.
                             _formKey.currentState.save();
-                            if (await model.login()) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(content: Text('OK')));
+                            int userID = await model.login();
+                            if (userID >= 0) {
+                              sharedPrefs
+                                  .storeInSharedPrefs({'userId': userID});
+                              Navigator.of(context).pushNamed('home');
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
@@ -75,6 +80,27 @@ class LoginView extends StatelessWidget {
                           }
                         },
                       ),
+                      SizedBox(
+                        height: 28.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                                text: "Don't have an account? ",
+                                style: TextStyle(color: Colors.black),
+                                children: [
+                                  TextSpan(
+                                      text: "Sign Up",
+                                      style: TextStyle(color: Colors.blue),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () => Navigator.of(context)
+                                            .pushNamed('signUp')),
+                                ]),
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),
