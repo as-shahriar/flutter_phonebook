@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phonebook/Services/SharedPref.dart';
+import 'package:phonebook/Services/utils.dart';
 import 'package:phonebook/core/scoped_models/add_model.dart';
 import 'package:phonebook/ui/widgets/formInputField.dart';
 import 'package:phonebook/ui/widgets/submit_button.dart';
@@ -87,8 +88,7 @@ class _AddContactState extends State<AddContact> {
                         validationHandler: () async {
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
-                            int userID = await _getUser();
-                            print(userID);
+                            int userID = await Utils.getUserID();
                             if (userID != -1) {
                               model.addContact(userID);
                               print("Added to DB");

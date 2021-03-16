@@ -1,4 +1,5 @@
 import 'package:phonebook/Services/SharedPref.dart';
+import 'package:phonebook/Services/utils.dart';
 import 'package:phonebook/core/scoped_models/home_model.dart';
 import 'package:phonebook/enums/view_state.dart';
 import 'package:phonebook/themeConfig.dart';
@@ -15,8 +16,6 @@ class HomeView extends StatelessWidget {
   final SharedPrefs sharedPrefs = locator<SharedPrefs>();
   @override
   Widget build(BuildContext context) {
-    var myAppModel = locator<HomeModel>();
-    myAppModel.getContacts(_getUser());
     return BaseView<HomeModel>(
       builder: (context, child, model) => Scaffold(
         appBar: AppBar(
@@ -64,11 +63,5 @@ class HomeView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<int> _getUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int user = (prefs.getInt('userID') ?? -1);
-    return user;
   }
 }
