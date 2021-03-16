@@ -67,8 +67,10 @@ class LoginView extends StatelessWidget {
                             _formKey.currentState.save();
                             int userID = await model.login();
                             if (userID >= 0) {
+                              print("Logedin user ID ${userID}");
                               sharedPrefs
-                                  .storeInSharedPrefs({'userId': userID});
+                                  .storeInSharedPrefs({'userID': userID});
+                              print(sharedPrefs.getUserInfo());
                               Navigator.of(context).pushNamed('home');
                             } else {
                               ScaffoldMessenger.of(context)

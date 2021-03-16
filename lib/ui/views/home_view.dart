@@ -6,15 +6,17 @@ import 'package:phonebook/ui/views/base_view.dart';
 import 'package:flutter/material.dart';
 import 'package:phonebook/ui/widgets/formInputField.dart';
 import 'package:phonebook/validators/validators.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service_locator.dart';
 import 'login_view.dart';
 
 class HomeView extends StatelessWidget {
   final SharedPrefs sharedPrefs = locator<SharedPrefs>();
-
   @override
   Widget build(BuildContext context) {
+    var myAppModel = locator<HomeModel>();
+    myAppModel.getContacts(_getUser());
     return BaseView<HomeModel>(
       builder: (context, child, model) => Scaffold(
         appBar: AppBar(
@@ -64,13 +66,9 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _getBodyUi(ViewState state) {
-    switch (state) {
-      case ViewState.Busy:
-        return CircularProgressIndicator();
-      case ViewState.Retrieved:
-      default:
-        return Text('Done');
-    }
+  Future<int> _getUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int user = (prefs.getInt('userID') ?? -1);
+    return user;
   }
 }

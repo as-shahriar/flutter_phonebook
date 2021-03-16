@@ -1,6 +1,6 @@
 class User {
   static const tblUser = 'user';
-  static const colId = 'id';
+  static const colId = 'user_id';
   static const colEmail = 'email';
   static const colPassword = 'password';
 

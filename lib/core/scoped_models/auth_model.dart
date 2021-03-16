@@ -44,7 +44,7 @@ class AuthnModel extends BaseModel {
   }
 
   void getUsers() async {
-    List<User> x = await _databaseHelper.fetchContacts();
+    List<User> x = await _databaseHelper.fetchUsers();
     x.forEach((element) {
       print('${element.id},${element.email},${element.password}');
     });

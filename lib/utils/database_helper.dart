@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:phonebook/core/models/contact.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:phonebook/core/models/user.dart';
@@ -23,7 +24,7 @@ class DatabaseHelper {
 
     String dbPath = join(appDocDir.path, _databaseName);
     return await openDatabase(dbPath,
-        version: _databaseVersion, onCreate: _onCreateDB);
+        version: _databaseVersion, onCreate: _create);
   }
 
   _onCreateDB(Database db, int version) async {
@@ -36,12 +37,57 @@ class DatabaseHelper {
       ''');
   }
 
+  Future _create(Database db, int version) async {
+    await db.execute("""
+            CREATE TABLE ${'email'} (
+              email_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+              contact_id INTEGER NOT NULL,
+              email TEXT NOT NULL,
+              FOREIGN KEY (contact_id) REFERENCES ${'contact'} (${'contact_id'}) 
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+            )""");
+    await db.execute("""
+    CREATE TABLE ${'phone'} (
+      phone_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      contact_id INTEGER NOT NULL,
+      phone TEXT NOT NULL,
+      FOREIGN KEY (contact_id) REFERENCES ${'contact'} (${'contact_id'}) 
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+    )""");
+    await db.execute("""
+            CREATE TABLE ${'contact'} (
+              contact_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+              user_id INTEGER NOT NULL,
+              address TEXT NOT NULL,
+              name TEXT NOT NULL,
+              FOREIGN KEY (user_id) REFERENCES ${User.tblUser} (${User.colId}) 
+                ON DELETE NO ACTION ON UPDATE NO ACTION
+            )""");
+
+    await db.execute("""
+            CREATE TABLE ${User.tblUser}(
+        ${User.colId} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${User.colEmail} TEXT NOT NULL,
+        ${User.colPassword} TEXT NOT NULL
+      )""");
+  }
+
+  insertContact(Contact contact, Email email, Phone phone) async {
+    Database db = await database;
+    int contact_id = await db.insert('contact', contact.toMap());
+    print(contact_id);
+    email.contact_id = contact_id;
+    phone.contact_id = contact_id;
+    await db.insert('email', email.toMap());
+    await db.insert('phone', phone.toMap());
+  }
+
   Future<int> insertUser(User user) async {
     Database db = await database;
     return await db.insert(User.tblUser, user.toMap());
   }
 
-  Future<List<User>> fetchContacts() async {
+  Future<List<User>> fetchUsers() async {
     Database db = await database;
     List<Map> contacts = await db.query(User.tblUser);
     return contacts.length == 0
@@ -69,5 +115,14 @@ class DatabaseHelper {
     Map a = result.firstWhere((element) => element['email'] == email,
         orElse: () => null);
     return (a == null);
+  }
+
+  Future<List<Map>> fetchContactsByUser(int id) async {
+    Database db = await database;
+    List<Map> list = await db.rawQuery(
+        // ignore: unnecessary_brace_in_string_interps
+        'SELECT * FROM user INNER JOIN contact ON user.user_id=contact.user_id WHERE user.user_id = ${id};');
+
+    return list;
   }
 }
