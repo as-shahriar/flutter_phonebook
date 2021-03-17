@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:phonebook/Services/SharedPref.dart';
 import 'package:phonebook/Services/utils.dart';
 import 'package:phonebook/core/scoped_models/add_model.dart';
@@ -7,7 +8,7 @@ import 'package:phonebook/ui/widgets/formInputField.dart';
 import 'package:phonebook/ui/widgets/submit_button.dart';
 import 'package:phonebook/validators/validators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:io';
 import '../../service_locator.dart';
 import '../../themeConfig.dart';
 import 'base_view.dart';
@@ -19,7 +20,7 @@ class AddContact extends StatefulWidget {
 
 class _AddContactState extends State<AddContact> {
   final _formKey = GlobalKey<FormState>();
-
+  File selectedImage;
   final SharedPrefs sharedPrefs = locator<SharedPrefs>();
   @override
   Widget build(BuildContext context) {
@@ -52,11 +53,55 @@ class _AddContactState extends State<AddContact> {
                 padding: const EdgeInsets.all(20.0),
                 child: Form(
                   key: _formKey,
-                  child: Column(
+                  child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
                     children: [
                       Text(
-                        "Add New Contact",
-                        style: TextStyle(fontSize: 20),
+                        "Create New Contact",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: primaryColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      Divider(
+                        color: Colors.blueAccent[300],
+                        height: 36,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          File img = await handleImageSelected();
+                          setState(() {
+                            selectedImage = img;
+                          });
+                        },
+                        child: CircleAvatar(
+                          radius: 50.0,
+                          backgroundColor: Colors.grey,
+                          child: selectedImage != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.file(
+                                    selectedImage,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  width: 100,
+                                  height: 100,
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                        ),
                       ),
                       SizedBox(height: 15.0),
                       InputField(
@@ -92,6 +137,7 @@ class _AddContactState extends State<AddContact> {
                             if (userID != -1) {
                               model.addContact(userID);
                               print("Added to DB");
+                              Navigator.of(context).pushNamed('home');
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -106,9 +152,13 @@ class _AddContactState extends State<AddContact> {
                 ))));
   }
 
-  Future<int> _getUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int user = (prefs.getInt('userID') ?? -1);
-    return user;
+  Future<File> handleImageSelected() async {
+    final picker = ImagePicker();
+    PickedFile file =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    if (file != null) {
+      return File(file.path);
+    } else
+      return null;
   }
 }
