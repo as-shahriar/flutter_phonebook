@@ -98,6 +98,7 @@ class BaseContact {
     contact.contact_id = map['contact_id'];
     contact.address = map['address'];
     contact.name = map['name'];
+    contact.picture = map['picture'];
 
     List l = map['phones'].split(',');
     for (var item in l) {

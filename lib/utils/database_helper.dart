@@ -131,7 +131,7 @@ class DatabaseHelper {
     Database db = await database;
     List<Map> list = await db.rawQuery(
         // ignore: unnecessary_brace_in_string_interps
-        'SELECT contact.contact_id, contact.name, contact.address, GROUP_CONCAT(distinct (phone.phone_id ||"-"|| phone.phone)) as phones, GROUP_CONCAT(distinct (email.email_id ||"-"|| email.email)) as emails FROM contact INNER JOIN phone ON contact.contact_id=phone.contact_id INNER JOIN email ON contact.contact_id=email.contact_id  WHERE contact.contact_id = ${id} GROUP BY contact.contact_id');
+        'SELECT contact.contact_id, contact.name, contact.picture, contact.address, GROUP_CONCAT(distinct (phone.phone_id ||"-"|| phone.phone)) as phones, GROUP_CONCAT(distinct (email.email_id ||"-"|| email.email)) as emails FROM contact INNER JOIN phone ON contact.contact_id=phone.contact_id INNER JOIN email ON contact.contact_id=email.contact_id  WHERE contact.contact_id = ${id} GROUP BY contact.contact_id');
 
     return list;
   }
