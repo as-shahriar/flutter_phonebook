@@ -8,6 +8,8 @@ import 'package:phonebook/utils/database_helper.dart';
 import 'base_model.dart';
 
 class HomeModel extends BaseModel {
+  bool loaded = false;
+
   HomeModel() {
     getContacts(Utils.getUserID());
   }
@@ -28,11 +30,4 @@ class HomeModel extends BaseModel {
     contacts.add(BaseContact.contact(contact));
     notifyListeners();
   }
-}
-
-class BaseContact {
-  Contact contact = new Contact();
-  List<Email> emails = [];
-  List<Phone> phones = [];
-  BaseContact.contact(this.contact);
 }

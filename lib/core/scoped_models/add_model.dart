@@ -16,6 +16,11 @@ class AddContactModel extends BaseModel {
     notifyListeners();
   }
 
+  void setPicture(value) {
+    contact.picture = value;
+    notifyListeners();
+  }
+
   void setAddress(value) {
     contact.address = value;
     notifyListeners();

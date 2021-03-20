@@ -22,11 +22,11 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final SharedPrefs sharedPrefs = locator<SharedPrefs>();
   List<Contact> contacts = [];
-
   @override
   void initState() {
     super.initState();
-    // _getAllContacts();
+    var myAppModel = locator<HomeModel>();
+    if (!myAppModel.loaded) myAppModel.getContacts(Utils.getUserID());
   }
 
   @override
@@ -62,50 +62,57 @@ class _HomeViewState extends State<HomeView> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  elevation: 0.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CircleAvatar(
-                          radius: 25.0,
-                          backgroundColor: randomColorPicker().shade300,
-                          child: Text(
-                            model.contacts[index].contact.name[0].toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              color: Colors.white,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('details',
+                        arguments: model.contacts[index].contact.contact_id);
+                  },
+                  child: Card(
+                    elevation: 0.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 25.0,
+                            backgroundColor: Utils.randomColorPicker().shade200,
+                            child: model.contacts[index].contact.picture != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.memory(
+                                      model.contacts[index].contact.picture,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Text(
+                                    (model.contacts[index].contact.name
+                                                .length !=
+                                            0)
+                                        ? model.contacts[index].contact.name[0]
+                                            .toUpperCase()
+                                        : '?',
+                                    style: TextStyle(
+                                      fontSize: 30.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Container(
+                              width: 140.0,
+                              child: Text(
+                                model.contacts[index].contact.name,
+                                // textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 15.0),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 140.0,
-                          child: Text(
-                            model.contacts[index].contact.name,
-                            // textAlign: TextAlign.start,
-                            style: TextStyle(fontSize: 15.0),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.call),
-                              onPressed: () {},
-                              color: Colors.green,
-                              padding: EdgeInsets.all(0.0),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.message),
-                              onPressed: () {},
-                              color: Colors.lightBlueAccent[400],
-                              padding: EdgeInsets.all(0.0),
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -113,7 +120,6 @@ class _HomeViewState extends State<HomeView> {
             }),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            print("Number of contact ${model.contacts.length}");
             Navigator.of(context).pushNamed('addContact');
           },
           child: Icon(Icons.add),
@@ -121,9 +127,5 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     );
-  }
-
-  MaterialColor randomColorPicker() {
-    return Colors.primaries[Random().nextInt(Colors.primaries.length)];
   }
 }

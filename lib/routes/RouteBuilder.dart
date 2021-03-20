@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phonebook/ui/views/add_view.dart';
+import 'package:phonebook/ui/views/details_view.dart';
 import 'package:phonebook/ui/views/home_view.dart';
 import 'package:phonebook/ui/views/login_view.dart';
 import 'package:phonebook/ui/views/signup_view.dart';
@@ -17,7 +18,8 @@ class RouteBuilder {
         return MaterialPageRoute(builder: (_) => HomeView());
       case 'addContact':
         return MaterialPageRoute(builder: (_) => AddContact());
-
+      case 'details':
+        return MaterialPageRoute(builder: (_) => DetailsView(contactID: args));
       default:
         return null;
     }

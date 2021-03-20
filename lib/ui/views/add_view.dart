@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,7 +22,7 @@ class AddContact extends StatefulWidget {
 
 class _AddContactState extends State<AddContact> {
   final _formKey = GlobalKey<FormState>();
-  File selectedImage;
+  Uint8List selectedImage;
   final SharedPrefs sharedPrefs = locator<SharedPrefs>();
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,8 @@ class _AddContactState extends State<AddContact> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          File img = await handleImageSelected();
+                          Uint8List img = await handleImageSelected();
+                          model.setPicture(img);
                           setState(() {
                             selectedImage = img;
                           });
@@ -82,11 +85,11 @@ class _AddContactState extends State<AddContact> {
                           child: selectedImage != null
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
-                                  child: Image.file(
+                                  child: Image.memory(
                                     selectedImage,
                                     width: 100,
                                     height: 100,
-                                    fit: BoxFit.fitHeight,
+                                    fit: BoxFit.cover,
                                   ),
                                 )
                               : Container(
@@ -152,12 +155,12 @@ class _AddContactState extends State<AddContact> {
                 ))));
   }
 
-  Future<File> handleImageSelected() async {
+  Future<Uint8List> handleImageSelected() async {
     final picker = ImagePicker();
     PickedFile file =
         await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     if (file != null) {
-      return File(file.path);
+      return File(file.path).readAsBytesSync();
     } else
       return null;
   }

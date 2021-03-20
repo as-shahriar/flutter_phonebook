@@ -59,6 +59,7 @@ class DatabaseHelper {
               contact_id INTEGER PRIMARY KEY AUTOINCREMENT, 
               user_id INTEGER NOT NULL,
               address TEXT NOT NULL,
+              picture BLOB,
               name TEXT NOT NULL,
               FOREIGN KEY (user_id) REFERENCES ${User.tblUser} (${User.colId}) 
                 ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -122,6 +123,15 @@ class DatabaseHelper {
     List<Map> list = await db.rawQuery(
         // ignore: unnecessary_brace_in_string_interps
         'SELECT * FROM user INNER JOIN contact ON user.user_id=contact.user_id WHERE user.user_id = ${id};');
+
+    return list;
+  }
+
+  Future<List<Map>> fetchUserInformation(int id) async {
+    Database db = await database;
+    List<Map> list = await db.rawQuery(
+        // ignore: unnecessary_brace_in_string_interps
+        'SELECT contact.contact_id, contact.name, contact.address, GROUP_CONCAT(distinct (phone.phone_id ||"-"|| phone.phone)) as phones, GROUP_CONCAT(distinct (email.email_id ||"-"|| email.email)) as emails FROM contact INNER JOIN phone ON contact.contact_id=phone.contact_id INNER JOIN email ON contact.contact_id=email.contact_id  WHERE contact.contact_id = ${id} GROUP BY contact.contact_id');
 
     return list;
   }
