@@ -6,24 +6,25 @@ class InputField extends StatelessWidget {
 
   final String hintText;
   final bool hideText;
+  final String value;
   const InputField(
       {this.validationHandler,
       this.onSaveHandler,
       this.hintText,
+      this.value,
       this.hideText = false});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: value,
       validator: validationHandler,
       onSaved: onSaveHandler,
       obscureText: hideText,
-      style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: hintText,
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(10.0))),
+        labelText: hintText,
+        border: OutlineInputBorder(),
+      ),
     );
   }
 }

@@ -18,8 +18,6 @@ class DetailsView extends StatefulWidget {
 }
 
 class _DetailsViewState extends State<DetailsView> {
-  final _formKey = GlobalKey<FormState>();
-
   final SharedPrefs sharedPrefs = locator<SharedPrefs>();
   BaseContact user = new BaseContact();
 
@@ -45,7 +43,10 @@ class _DetailsViewState extends State<DetailsView> {
                 actions: <Widget>[
                   PopupMenuButton<String>(
                     onSelected: (String choice) {
-                      if (choice == 'Logout') {
+                      if (choice == 'Edit') {
+                        Navigator.of(context)
+                            .pushNamed('edit', arguments: widget.contactID);
+                      } else if (choice == 'Logout') {
                         sharedPrefs.removeSharedPrefs();
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             'login', (Route<dynamic> route) => false);

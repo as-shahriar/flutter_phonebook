@@ -81,7 +81,7 @@ class _AddContactState extends State<AddContact> {
                         },
                         child: CircleAvatar(
                           radius: 50.0,
-                          backgroundColor: Colors.grey,
+                          backgroundColor: Colors.blueAccent[200],
                           child: selectedImage != null
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
@@ -94,14 +94,14 @@ class _AddContactState extends State<AddContact> {
                                 )
                               : Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[300],
+                                    color: Colors.lightBlueAccent.shade100,
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   width: 100,
                                   height: 100,
                                   child: Icon(
                                     Icons.camera_alt,
-                                    color: Colors.grey[800],
+                                    color: Colors.white,
                                   ),
                                 ),
                         ),

@@ -1,6 +1,5 @@
 import 'package:phonebook/Services/utils.dart';
 import 'package:phonebook/core/models/contact.dart';
-import 'package:phonebook/core/services/storage_service.dart';
 import 'package:phonebook/enums/view_state.dart';
 import 'package:phonebook/service_locator.dart';
 import 'package:phonebook/utils/database_helper.dart';
@@ -13,7 +12,6 @@ class HomeModel extends BaseModel {
   HomeModel() {
     getContacts(Utils.getUserID());
   }
-  StorageService storageService = locator<StorageService>();
   DatabaseHelper _databaseHelper = DatabaseHelper.instance;
   List<BaseContact> contacts = [];
 
