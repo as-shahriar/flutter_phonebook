@@ -126,12 +126,24 @@ class _EditViewState extends State<EditView> {
                     Column(
                       children: [
                         for (Phone number in user.phones)
-                          InputField(
-                              validationHandler: textValidator,
-                              onSaveHandler: ((value) => print(value)),
-                              hintText: 'Mobile No.',
-                              hideText: false,
-                              value: number.phone),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: InputField(
+                                    validationHandler: textValidator,
+                                    onSaveHandler: ((value) => print(value)),
+                                    hintText: 'Mobile No.',
+                                    hideText: false,
+                                    value: number.phone),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete,
+                                    size: 30.0, color: Colors.grey[400]),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                     Row(
@@ -151,12 +163,24 @@ class _EditViewState extends State<EditView> {
                     Column(
                       children: [
                         for (Email email in user.emails)
-                          InputField(
-                              validationHandler: textValidator,
-                              onSaveHandler: ((value) => print(value)),
-                              hintText: 'Email Address',
-                              hideText: false,
-                              value: email.email),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: InputField(
+                                    validationHandler: textValidator,
+                                    onSaveHandler: ((value) => print(value)),
+                                    hintText: 'Email Address',
+                                    hideText: false,
+                                    value: email.email),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete,
+                                    size: 30.0, color: Colors.grey[400]),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                     SizedBox(height: 25.0),
