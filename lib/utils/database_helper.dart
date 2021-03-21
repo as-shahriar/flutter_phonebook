@@ -135,4 +135,14 @@ class DatabaseHelper {
 
     return list;
   }
+
+  Future<int> insertPhoneNumber(Phone phone) async {
+    Database db = await database;
+    return await db.insert('phone', phone.toMap());
+  }
+
+  Future<int> insertEmail(Email email) async {
+    Database db = await database;
+    return await db.insert('email', email.toMap());
+  }
 }
