@@ -1,4 +1,6 @@
+import 'package:phonebook/core/scoped_models/splash.dart';
 import 'package:phonebook/routes/RouteBuilder.dart';
+import 'package:phonebook/themeConfig.dart';
 import 'package:phonebook/ui/views/home_view.dart';
 import 'package:phonebook/ui/views/login_view.dart';
 import 'package:flutter/material.dart';
@@ -18,19 +20,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'PhoneBook',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FutureBuilder<bool>(
+      home: FutureBuilder<Map>(
         future: sharedPrefs.checkIfPresentInSharedPrefs(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.hasData &&
               snapshot.connectionState == ConnectionState.done) {
-            return snapshot.data ? HomeView() : LoginView();
+            print(snapshot.data);
+            if (!snapshot.data['isInit']) {
+              sharedPrefs.setInit();
+              return Splash();
+            } else if (snapshot.data['user'])
+              return HomeView();
+            else
+              return LoginView();
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+              ),
             );
           }
         },

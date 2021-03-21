@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
   String userData = 'userInfo';
+  String initial = "initial";
+
   void storeInSharedPrefs(Map data) async {
     //userId, email
     final prefs = await SharedPreferences.getInstance();
@@ -10,9 +12,12 @@ class SharedPrefs {
     prefs.setString(userData, info);
   }
 
-  Future<bool> checkIfPresentInSharedPrefs() async {
+  Future<Map> checkIfPresentInSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.containsKey(userData);
+    return {
+      'user': prefs.containsKey(userData),
+      'isInit': prefs.containsKey(initial)
+    };
   }
 
   Future<Map> getUserInfo() async {
@@ -26,5 +31,10 @@ class SharedPrefs {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(userData);
     return;
+  }
+
+  void setInit() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(initial, "true");
   }
 }
