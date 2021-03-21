@@ -134,7 +134,7 @@ class _EditViewState extends State<EditView> {
                       ),
                       Column(
                         children: [
-                          for (Phone number in user.phones)
+                          for (int i = 0; i < user.phones.length; i++)
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Row(
@@ -144,17 +144,31 @@ class _EditViewState extends State<EditView> {
                                   Expanded(
                                     child: InputField(
                                         validationHandler: textValidator,
-                                        onSaveHandler: ((value) => model
-                                            .setNumber(number.phone_id, value)),
+                                        onSaveHandler: ((value) =>
+                                            model.setNumber(
+                                                user.phones[i].phone_id,
+                                                value)),
                                         hintText: 'Mobile No.',
                                         hideText: false,
-                                        value: number.phone),
+                                        value: user.phones[i].phone),
                                   ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete,
-                                        size: 30.0, color: Colors.grey[400]),
-                                    onPressed: () {},
-                                  ),
+                                  (i != 0)
+                                      ? IconButton(
+                                          icon: Icon(Icons.delete,
+                                              size: 30.0,
+                                              color: Colors.grey[400]),
+                                          onPressed: () {
+                                            if (model.deleteNumber(
+                                                    user.phones[i].phone_id) !=
+                                                -1) {
+                                              setState(() {
+                                                user.phones
+                                                    .remove(user.phones[i]);
+                                              });
+                                            }
+                                          },
+                                        )
+                                      : Container(),
                                 ],
                               ),
                             ),
@@ -169,7 +183,7 @@ class _EditViewState extends State<EditView> {
                       ),
                       Column(
                         children: [
-                          for (Email email in user.emails)
+                          for (int i = 0; i < user.emails.length; i++)
                             Padding(
                               padding: const EdgeInsets.only(top: 16.0),
                               child: Row(
@@ -179,17 +193,31 @@ class _EditViewState extends State<EditView> {
                                   Expanded(
                                     child: InputField(
                                         validationHandler: textValidator,
-                                        onSaveHandler: ((value) => model
-                                            .setEmail(email.email_id, value)),
+                                        onSaveHandler: ((value) =>
+                                            model.setEmail(
+                                                user.emails[i].email_id,
+                                                value)),
                                         hintText: 'Email Address',
                                         hideText: false,
-                                        value: email.email),
+                                        value: user.emails[i].email),
                                   ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete,
-                                        size: 30.0, color: Colors.grey[400]),
-                                    onPressed: () {},
-                                  ),
+                                  (i != 0)
+                                      ? IconButton(
+                                          icon: Icon(Icons.delete,
+                                              size: 30.0,
+                                              color: Colors.grey[400]),
+                                          onPressed: () {
+                                            if (model.deleteEmail(
+                                                    user.emails[i].email_id) !=
+                                                -1) {
+                                              setState(() {
+                                                user.emails
+                                                    .remove(user.emails[i]);
+                                              });
+                                            }
+                                          },
+                                        )
+                                      : Container(),
                                 ],
                               ),
                             ),

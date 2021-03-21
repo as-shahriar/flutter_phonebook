@@ -59,4 +59,14 @@ class EditModel extends BaseModel {
     else
       return -1;
   }
+
+  Future<int> deleteNumber(int id) async {
+    int res = await _databaseHelper.deleteNumber(id);
+    return res;
+  }
+
+  Future<int> deleteEmail(int id) async {
+    int res = await _databaseHelper.deleteEmail(id);
+    return res;
+  }
 }

@@ -4,7 +4,6 @@ import 'package:phonebook/Services/SharedPref.dart';
 import 'package:phonebook/Services/utils.dart';
 import 'package:phonebook/core/models/contact.dart';
 import 'package:phonebook/core/scoped_models/home_model.dart';
-import 'package:phonebook/enums/view_state.dart';
 import 'package:phonebook/service_locator.dart';
 import 'package:phonebook/themeConfig.dart';
 import 'package:phonebook/ui/views/base_view.dart';
@@ -43,7 +42,6 @@ class _HomeViewState extends State<HomeView> {
                   sharedPrefs.removeSharedPrefs();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       'login', (Route<dynamic> route) => false);
-                  // Navigator.of(context).pushNamed('login');
                 }
               },
               itemBuilder: (BuildContext context) {
