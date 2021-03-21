@@ -139,8 +139,8 @@ class _AddContactState extends State<AddContact> {
                             int userID = await Utils.getUserID();
                             if (userID != -1) {
                               model.addContact(userID);
-                              print("Added to DB");
-                              Navigator.of(context).pushNamed('home');
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  'home', (Route<dynamic> route) => false);
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:phonebook/Services/SharedPref.dart';
 import 'package:phonebook/Services/utils.dart';
 import 'package:phonebook/core/models/contact.dart';
@@ -29,8 +33,6 @@ class _EditViewState extends State<EditView> {
     super.initState();
     var myAppModel = locator<EditModel>();
     myAppModel.getContactDetails(widget.contactID).then((value) {
-      print("value:");
-      print(value.contact.name);
       setState(() => user = value);
     });
   }
@@ -64,129 +66,165 @@ class _EditViewState extends State<EditView> {
               ),
               body: Padding(
                 padding: EdgeInsets.all(16.0),
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    CircleAvatar(
-                      radius: 50.0,
-                      backgroundColor: Utils.randomColorPicker().shade200,
-                      child: user.contact.picture != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Image.memory(
-                                user.contact.picture,
-                                width: 100,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : Text(
-                              (user.contact?.name?.length != 0 &&
-                                      user.contact.name != null)
-                                  ? user.contact.name[0].toUpperCase()
-                                  : '?',
-                              style: TextStyle(
-                                fontSize: 30.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                    ),
-                    Padding(padding: EdgeInsets.symmetric(vertical: 10.0)),
-                    if (user.contact.name != null)
-                      InputField(
-                        validationHandler: textValidator,
-                        onSaveHandler: ((value) => print(value)),
-                        hintText: 'Full Name',
-                        value: user.contact.name,
-                        hideText: false,
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          Uint8List img = await handleImageSelected();
+                          model.setPicture(img);
+                          setState(() {
+                            user.contact.picture = img;
+                          });
+                        },
+                        child: CircleAvatar(
+                          radius: 50.0,
+                          backgroundColor: Colors.blueAccent[200],
+                          child: user.contact.picture != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.memory(
+                                    user.contact.picture,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlueAccent.shade100,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  width: 100,
+                                  height: 100,
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
                       ),
-                    SizedBox(height: 25.0),
-                    if (user.contact.address != null)
-                      InputField(
-                        validationHandler: textValidator,
-                        onSaveHandler: ((value) => print(value)),
-                        hintText: 'Address',
-                        value: user.contact.address,
-                        hideText: false,
+                      Padding(padding: EdgeInsets.symmetric(vertical: 10.0)),
+                      if (user.contact.name != null)
+                        InputField(
+                          validationHandler: textValidator,
+                          onSaveHandler: ((value) => model.setName(value)),
+                          hintText: 'Full Name',
+                          value: user.contact.name,
+                          hideText: false,
+                        ),
+                      SizedBox(height: 25.0),
+                      if (user.contact.address != null)
+                        InputField(
+                          validationHandler: textValidator,
+                          onSaveHandler: ((value) => model.setAddress(value)),
+                          hintText: 'Address',
+                          value: user.contact.address,
+                          hideText: false,
+                        ),
+                      SizedBox(
+                        height: 28.0,
                       ),
-                    SizedBox(
-                      height: 28.0,
-                    ),
-                    Text(
-                      "Number",
-                      style: TextStyle(color: Colors.grey[400]),
-                    ),
-                    Column(
-                      children: [
-                        for (Phone number in user.phones)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: InputField(
-                                      validationHandler: textValidator,
-                                      onSaveHandler: ((value) => print(value)),
-                                      hintText: 'Mobile No.',
-                                      hideText: false,
-                                      value: number.phone),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.delete,
-                                      size: 30.0, color: Colors.grey[400]),
-                                  onPressed: () {},
-                                ),
-                              ],
+                      Text(
+                        "Number",
+                        style: TextStyle(color: Colors.grey[400]),
+                      ),
+                      Column(
+                        children: [
+                          for (Phone number in user.phones)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: InputField(
+                                        validationHandler: textValidator,
+                                        onSaveHandler: ((value) => model
+                                            .setNumber(number.phone_id, value)),
+                                        hintText: 'Mobile No.',
+                                        hideText: false,
+                                        value: number.phone),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete,
+                                        size: 30.0, color: Colors.grey[400]),
+                                    onPressed: () {},
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 28.0,
-                    ),
-                    Text(
-                      "Email",
-                      style: TextStyle(color: Colors.grey[400]),
-                    ),
-                    Column(
-                      children: [
-                        for (Email email in user.emails)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: InputField(
-                                      validationHandler: textValidator,
-                                      onSaveHandler: ((value) => print(value)),
-                                      hintText: 'Email Address',
-                                      hideText: false,
-                                      value: email.email),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.delete,
-                                      size: 30.0, color: Colors.grey[400]),
-                                  onPressed: () {},
-                                ),
-                              ],
+                        ],
+                      ),
+                      SizedBox(
+                        height: 28.0,
+                      ),
+                      Text(
+                        "Email",
+                        style: TextStyle(color: Colors.grey[400]),
+                      ),
+                      Column(
+                        children: [
+                          for (Email email in user.emails)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: InputField(
+                                        validationHandler: textValidator,
+                                        onSaveHandler: ((value) => model
+                                            .setEmail(email.email_id, value)),
+                                        hintText: 'Email Address',
+                                        hideText: false,
+                                        value: email.email),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete,
+                                        size: 30.0, color: Colors.grey[400]),
+                                    onPressed: () {},
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                      ],
-                    ),
-                    SizedBox(height: 25.0),
-                    SubmitButton(
-                      text: "Update",
-                      validationHandler: () async {
-                        if (_formKey.currentState.validate()) {
-                          _formKey.currentState.save();
-                        }
-                      },
-                    ),
-                  ],
+                        ],
+                      ),
+                      SizedBox(height: 25.0),
+                      SubmitButton(
+                        text: "Update",
+                        validationHandler: () async {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            if (model.user.contact.picture == null)
+                              model.setPicture(user.contact.picture);
+                            if (model.updateContact(widget.contactID) != -1) {
+                              print("updated");
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  'home', (Route<dynamic> route) => false);
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ));
+  }
+
+  Future<Uint8List> handleImageSelected() async {
+    final picker = ImagePicker();
+    PickedFile file =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    if (file != null) {
+      return File(file.path).readAsBytesSync();
+    } else
+      return null;
   }
 }

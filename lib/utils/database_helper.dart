@@ -108,6 +108,29 @@ class DatabaseHelper {
       return -1;
   }
 
+  Future<int> updateContact(Contact contact) async {
+    Database db = await database;
+    return await db.rawUpdate(
+        'UPDATE contact SET name = ?, address = ?, picture = ? WHERE contact_id = ?',
+        [contact.name, contact.address, contact.picture, contact.contact_id]);
+  }
+
+  Future<int> updateEmail({int id, String email}) async {
+    Database db = await database;
+    return await db.rawUpdate('UPDATE email SET email = ? WHERE email_id = ?', [
+      email,
+      id,
+    ]);
+  }
+
+  Future<int> updatePhone({int id, String phone}) async {
+    Database db = await database;
+    return await db.rawUpdate('UPDATE phone SET phone = ? WHERE phone_id = ?', [
+      phone,
+      id,
+    ]);
+  }
+
   Future<bool> uniqueEmail(String email) async {
     Database db = await database;
     List<dynamic> whereargs = [email];
