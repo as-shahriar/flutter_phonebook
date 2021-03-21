@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.hasData &&
               snapshot.connectionState == ConnectionState.done) {
-            print(snapshot.data);
             if (!snapshot.data['isInit']) {
               sharedPrefs.setInit();
               return Splash();

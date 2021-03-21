@@ -145,7 +145,7 @@ class DatabaseHelper {
     Database db = await database;
     List<Map> list = await db.rawQuery(
         // ignore: unnecessary_brace_in_string_interps
-        'SELECT * FROM user INNER JOIN contact ON user.user_id=contact.user_id WHERE user.user_id = ${id};');
+        'SELECT * FROM user INNER JOIN contact ON user.user_id=contact.user_id WHERE user.user_id = ${id} order by contact.name asc;');
 
     return list;
   }

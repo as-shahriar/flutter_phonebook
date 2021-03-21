@@ -143,7 +143,7 @@ class _EditViewState extends State<EditView> {
                                 children: [
                                   Expanded(
                                     child: InputField(
-                                        validationHandler: textValidator,
+                                        validationHandler: numberValidator,
                                         onSaveHandler: ((value) =>
                                             model.setNumber(
                                                 user.phones[i].phone_id,
@@ -192,7 +192,7 @@ class _EditViewState extends State<EditView> {
                                 children: [
                                   Expanded(
                                     child: InputField(
-                                        validationHandler: textValidator,
+                                        validationHandler: emailValidator,
                                         onSaveHandler: ((value) =>
                                             model.setEmail(
                                                 user.emails[i].email_id,

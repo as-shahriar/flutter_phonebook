@@ -186,7 +186,7 @@ class _DetailsViewState extends State<DetailsView> {
                                   children: [
                                     Expanded(
                                       child: InputField(
-                                          validationHandler: textValidator,
+                                          validationHandler: numberValidator,
                                           onSaveHandler: ((value) =>
                                               model.setPhone(value)),
                                           hintText: 'Mobile No.',
@@ -272,7 +272,7 @@ class _DetailsViewState extends State<DetailsView> {
                                   children: [
                                     Expanded(
                                       child: InputField(
-                                          validationHandler: textValidator,
+                                          validationHandler: emailValidator,
                                           onSaveHandler: ((value) =>
                                               model.setEmail(value)),
                                           hintText: 'Email Address.',

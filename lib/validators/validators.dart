@@ -1,5 +1,4 @@
 String emailValidator(value) {
-  return null;
   if (!value.isEmpty &&
       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+"
               r"@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -10,7 +9,6 @@ String emailValidator(value) {
 }
 
 String passValidator(value) {
-  return null;
   if (value.isEmpty) {
     return 'Password can\'t be empty';
   }
@@ -21,10 +19,18 @@ String passValidator(value) {
 }
 
 String textValidator(value) {
-  return null;
   if (value.isEmpty) {
     return 'Field can\'t be empty';
   }
 
   return null;
+}
+
+String numberValidator(value) {
+  if (value.isEmpty)
+    return 'Field can\'t be empty';
+  else if (RegExp(r"^(\+8801|01)+[0-9]{9}$").hasMatch(value))
+    return null;
+  else
+    return "Please enter valid number";
 }

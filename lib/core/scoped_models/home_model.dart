@@ -15,6 +15,18 @@ class HomeModel extends BaseModel {
   DatabaseHelper _databaseHelper = DatabaseHelper.instance;
   List<BaseContact> contacts = [];
 
+  void sortAZ() {
+    contacts.sort((a, b) =>
+        a.contact.name.toLowerCase().compareTo(b.contact.name.toLowerCase()));
+    notifyListeners();
+  }
+
+  void sortZA() {
+    contacts.sort((a, b) =>
+        b.contact.name.toLowerCase().compareTo(a.contact.name.toLowerCase()));
+    notifyListeners();
+  }
+
   void getContacts(Future<int> id) async {
     int userId = await id;
     List<Map> data = await _databaseHelper.fetchContactsByUser(userId);

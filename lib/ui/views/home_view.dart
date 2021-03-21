@@ -20,7 +20,6 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final SharedPrefs sharedPrefs = locator<SharedPrefs>();
-  List<Contact> contacts = [];
   @override
   void initState() {
     super.initState();
@@ -38,14 +37,18 @@ class _HomeViewState extends State<HomeView> {
           actions: <Widget>[
             PopupMenuButton<String>(
               onSelected: (String choice) {
-                if (choice == 'Logout') {
+                if (choice == "Sort A-Z") {
+                  model.sortAZ();
+                } else if (choice == "Sort Z-A") {
+                  model.sortZA();
+                } else if (choice == 'Logout') {
                   sharedPrefs.removeSharedPrefs();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       'login', (Route<dynamic> route) => false);
                 }
               },
               itemBuilder: (BuildContext context) {
-                return {'Logout'}.map((String choice) {
+                return {'Sort A-Z', 'Sort Z-A', 'Logout'}.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,
                     child: Text(choice),

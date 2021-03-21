@@ -126,7 +126,7 @@ class _AddContactState extends State<AddContact> {
                       ),
                       SizedBox(height: 15.0),
                       InputField(
-                        validationHandler: textValidator,
+                        validationHandler: numberValidator,
                         onSaveHandler: ((value) => model.setNumber(value)),
                         hintText: "Mobile No.",
                       ),
@@ -144,7 +144,7 @@ class _AddContactState extends State<AddContact> {
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('Invalid Credantials.'),
+                              content: Text('All fields are required.'),
                               backgroundColor: Colors.red[300],
                             ));
                           }
