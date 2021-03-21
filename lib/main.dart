@@ -1,4 +1,4 @@
-import 'package:phonebook/core/scoped_models/splash.dart';
+import 'package:phonebook/ui/views/splash.dart';
 import 'package:phonebook/routes/RouteBuilder.dart';
 import 'package:phonebook/themeConfig.dart';
 import 'package:phonebook/ui/views/home_view.dart';

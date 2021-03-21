@@ -71,7 +71,8 @@ class LoginView extends StatelessWidget {
                               sharedPrefs
                                   .storeInSharedPrefs({'userID': userID});
                               print(sharedPrefs.getUserInfo());
-                              Navigator.of(context).pushNamed('home');
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  'home', (Route<dynamic> route) => false);
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(

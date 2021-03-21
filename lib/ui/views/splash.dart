@@ -46,7 +46,8 @@ class Splash extends StatelessWidget {
                 children: [
                   RaisedButton.icon(
                     onPressed: () {
-                      Navigator.of(context).pushNamed('signUp');
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          'signUp', (Route<dynamic> route) => false);
                     },
                     label: Text("Next"),
                     icon: Icon(Icons.skip_next),

@@ -51,6 +51,10 @@ class _DetailsViewState extends State<DetailsView> {
                       if (choice == 'Edit') {
                         Navigator.of(context)
                             .pushNamed('edit', arguments: widget.contactID);
+                      } else if (choice == 'Delete') {
+                        model.deleteContact(widget.contactID);
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            'home', (Route<dynamic> route) => false);
                       } else if (choice == 'Logout') {
                         sharedPrefs.removeSharedPrefs();
                         Navigator.of(context).pushNamedAndRemoveUntil(

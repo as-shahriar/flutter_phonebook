@@ -65,7 +65,8 @@ class SignupView extends StatelessWidget {
                             _formKey.currentState.save();
                             if (await model.uniqueEmail()) {
                               model.insertUser();
-                              Navigator.of(context).pushNamed('login');
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  'login', (Route<dynamic> route) => false);
                             } else {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(

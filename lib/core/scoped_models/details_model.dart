@@ -45,4 +45,8 @@ class DetailsModel extends BaseModel {
     user = BaseContact.fromMap(data[0]);
     return user;
   }
+
+  Future<int> deleteContact(int id) async {
+    return await _databaseHelper.deleteContact(id);
+  }
 }

@@ -145,4 +145,15 @@ class DatabaseHelper {
     Database db = await database;
     return await db.insert('email', email.toMap());
   }
+
+  Future<int> deleteContact(int id) async {
+    Database db = await database;
+    var res1 =
+        await db.rawDelete('DELETE FROM contact WHERE contact_id = ?', [id]);
+    var res2 =
+        await db.rawDelete('DELETE FROM phone WHERE contact_id = ?', [id]);
+    var res3 =
+        await db.rawDelete('DELETE FROM email WHERE contact_id = ?', [id]);
+    if (res1 == 1 && res2 == 1 && res3 == 1) return 1;
+  }
 }
