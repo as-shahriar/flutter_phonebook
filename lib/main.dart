@@ -37,9 +37,34 @@ class MyApp extends StatelessWidget {
             else
               return LoginView();
           } else {
-            return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.white,
+            return Scaffold(
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Welcome To",
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    "PhoneBook",
+                    style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 25.0),
+                  Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey[200],
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(primaryColor),
+                    ),
+                  ),
+                ],
               ),
             );
           }
